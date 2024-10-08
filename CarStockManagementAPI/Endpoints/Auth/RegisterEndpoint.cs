@@ -8,7 +8,6 @@ using FastEndpoints;
 
 namespace CarStockManagementAPI.Endpoints.Auth
 {
-    [HttpPost("/api/auth/register")]
     public class RegisterEndpoint : Endpoint<RegisterRequest, RegisterResponse>
     {
         private readonly IAuthService _authService;

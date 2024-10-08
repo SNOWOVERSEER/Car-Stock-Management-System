@@ -20,9 +20,14 @@ var connectionString = builder.Configuration.GetConnectionString("CarDealershipD
 builder.Services.AddSingleton(new CarDealershipDbContext(connectionString));
 builder.Services.AddScoped<IDbConnection>(sp => new SqliteConnection(connectionString));
 builder.Services.AddScoped<IDealerRepo, DealerRepo>();
-builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
+
+var jwtKey = builder.Configuration["Jwt:Key"];
+if (string.IsNullOrEmpty(jwtKey))
+{
+    throw new Exception("JWT Key is missing in configuration");
+}
+builder.Services.AddScoped<IJwtTokenGenerator>(_ => new JwtTokenGenerator(jwtKey));
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddSingleton(new JwtTokenGenerator(builder.Configuration["Jwt:Key"]));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
