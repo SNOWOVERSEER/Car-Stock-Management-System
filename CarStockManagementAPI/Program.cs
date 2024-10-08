@@ -20,6 +20,7 @@ var connectionString = builder.Configuration.GetConnectionString("CarDealershipD
 builder.Services.AddSingleton(new CarDealershipDbContext(connectionString));
 builder.Services.AddScoped<IDbConnection>(sp => new SqliteConnection(connectionString));
 builder.Services.AddScoped<IDealerRepo, DealerRepo>();
+builder.Services.AddScoped<ICarRepo, CarRepo>();
 
 var jwtKey = builder.Configuration["Jwt:Key"];
 if (string.IsNullOrEmpty(jwtKey))
@@ -28,6 +29,7 @@ if (string.IsNullOrEmpty(jwtKey))
 }
 builder.Services.AddScoped<IJwtTokenGenerator>(_ => new JwtTokenGenerator(jwtKey));
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICarService, CarService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
