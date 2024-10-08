@@ -102,4 +102,37 @@ public class CarServiceTests
         Assert.Equal("Car not found or you do not have permission to delete this car", result.Message);
         _carRepoMock.Verify(r => r.RemoveCarAsync(It.IsAny<int>()), Times.Never);
     }
+
+    // ListCarsAsync
+    [Fact]
+    public async Task ListCarsAsync_ShouldReturnCars_WhenDealerHasCars()
+    {
+        int dealerId = 1;
+        var cars = new List<Car>
+        {
+            new Car { Make = "Audi", Model = "A4", Year = 2020, Color = "Black", Stock = 5 },
+            new Car { Make = "BMW", Model = "X5", Year = 2021, Color = "White", Stock = 3 }
+        };
+
+        _carRepoMock.Setup(r => r.GetCarsByDealerIdAsync(dealerId))
+                    .ReturnsAsync(cars);
+
+        var result = await _carService.ListCarsAsync(dealerId);
+
+        Assert.Equal(2, result.Count());
+        Assert.Contains(result, car => car.Make == "Audi");
+        Assert.Contains(result, car => car.Make == "BMW");
+    }
+
+    [Fact]
+    public async Task ListCarsAsync_ShouldReturnEmpty_WhenDealerHasNoCars()
+    {
+        int dealerId = 1;
+        _carRepoMock.Setup(r => r.GetCarsByDealerIdAsync(dealerId))
+                    .ReturnsAsync(new List<Car>());
+
+        var result = await _carService.ListCarsAsync(dealerId);
+        Assert.Empty(result);
+    }
+
 }

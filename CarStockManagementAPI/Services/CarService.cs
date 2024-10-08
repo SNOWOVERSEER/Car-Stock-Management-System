@@ -12,6 +12,7 @@ namespace CarStockManagementAPI.Services
     {
         Task<(bool IsSuccess, string Message)> AddCarAsync(AddCarRequest repCar, int dealerId);
         Task<(bool IsSuccess, string Message)> RemoveCarAsync(int carId, int dealerId);
+        Task<IEnumerable<Car>> ListCarsAsync(int dealerId);
     }
     public class CarService : ICarService
     {
@@ -42,6 +43,11 @@ namespace CarStockManagementAPI.Services
             await _carRepo.AddCarAsync(car);
             return (true, "Car added successfully");
 
+        }
+
+        public async Task<IEnumerable<Car>> ListCarsAsync(int dealerId)
+        {
+            return await _carRepo.GetCarsByDealerIdAsync(dealerId);
         }
 
         public async Task<(bool IsSuccess, string Message)> RemoveCarAsync(int carId, int dealerId)
