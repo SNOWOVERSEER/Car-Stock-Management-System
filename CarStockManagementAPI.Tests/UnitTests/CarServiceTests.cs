@@ -167,4 +167,54 @@ public class CarServiceTests
         Assert.Equal("Car not found or you do not have permission to update this car", result.Message);
     }
 
+    // SearchCarsAsync
+    [Fact]
+    public async Task SearchCarsAsync_ShouldReturnCars_WhenMatchingCarsExist()
+    {
+        int dealerId = 1;
+        var cars = new List<Car>
+    {
+        new Car { Make = "Audi", Model = "A4", Year = 2020, Color = "Black", Stock = 5 },
+        new Car { Make = "Audi", Model = "A4", Year = 2019, Color = "White", Stock = 2 }
+    };
+
+        _carRepoMock.Setup(r => r.SearchCarsAsync(dealerId, "Audi", "A4")).ReturnsAsync(cars);
+
+        var result = await _carService.SearchCarsAsync(dealerId, "Audi", "A4");
+
+        Assert.Equal(2, result.Count());
+        Assert.Contains(result, car => car.Make == "Audi" && car.Model == "A4");
+    }
+
+    [Fact]
+    public async Task SearchCarsAsync_ShouldReturnEmpty_WhenNoMatchingCarsExist()
+    {
+        int dealerId = 1;
+
+        _carRepoMock.Setup(r => r.SearchCarsAsync(dealerId, "Audi", "Q7")).ReturnsAsync(new List<Car>());
+
+        var result = await _carService.SearchCarsAsync(dealerId, "Audi", "Q7");
+
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task SearchCarsAsync_ShouldReturnCars_WhenMakeMatchesAndModelIsNull()
+    {
+        int dealerId = 1;
+        var cars = new List<Car>
+    {
+        new Car { Make = "Audi", Model = "A4", Year = 2020, Color = "Black", Stock = 5 },
+        new Car { Make = "Audi", Model = "Q7", Year = 2019, Color = "White", Stock = 2 }
+    };
+
+        _carRepoMock.Setup(r => r.SearchCarsAsync(dealerId, "Audi", null)).ReturnsAsync(cars);
+
+        var result = await _carService.SearchCarsAsync(dealerId, "Audi", null);
+
+        Assert.Equal(2, result.Count());
+        Assert.Contains(result, car => car.Make == "Audi" && car.Model == "A4");
+        Assert.Contains(result, car => car.Make == "Audi" && car.Model == "Q7");
+    }
+
 }

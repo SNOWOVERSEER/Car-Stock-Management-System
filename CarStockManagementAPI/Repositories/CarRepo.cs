@@ -17,6 +17,7 @@ namespace CarStockManagementAPI.Repositories
         Task<Car> GetCarByDetailsAsync(string make, string model, int year, string color, int dealerId);
         Task<IEnumerable<Car>> GetCarsByDealerIdAsync(int dealerId);
         Task UpdateCarStockAsync(Car car);
+        Task<IEnumerable<Car>> SearchCarsAsync(int dealerId, string make, string? model);
     }
     public class CarRepo : ICarRepo
     {
@@ -60,6 +61,24 @@ namespace CarStockManagementAPI.Repositories
         {
             var query = @"UPDATE Car SET Stock = @Stock WHERE Id = @Id AND DealerId = @DealerId";
             await _connection.ExecuteAsync(query, new { car.Stock, car.Id, car.DealerId });
+        }
+
+        public async Task<IEnumerable<Car>> SearchCarsAsync(int dealerId, string make, string? model)
+        {
+            string query;
+            object parameters;
+            if (string.IsNullOrEmpty(model))
+            {
+                query = @"SELECT * FROM Car WHERE DealerId = @DealerId AND Make = @Make";
+                parameters = new { DealerId = dealerId, Make = make };
+            }
+            else
+            {
+                query = @"SELECT * FROM Car WHERE DealerId = @DealerId AND Make = @Make AND Model = @Model";
+                parameters = new { DealerId = dealerId, Make = make, Model = model };
+            }
+            return await _connection.QueryAsync<Car>(query, parameters);
+
         }
     }
 }

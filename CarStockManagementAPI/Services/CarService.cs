@@ -14,6 +14,8 @@ namespace CarStockManagementAPI.Services
         Task<(bool IsSuccess, string Message)> RemoveCarAsync(int carId, int dealerId);
         Task<IEnumerable<Car>> ListCarsAsync(int dealerId);
         Task<(bool IsSuccess, string Message)> UpdateCarStockAsync(int dealerId, int carId, int newStock);
+        Task<IEnumerable<CarResponse>> SearchCarsAsync(int dealerId, string make, string? model);
+
     }
     public class CarService : ICarService
     {
@@ -60,6 +62,21 @@ namespace CarStockManagementAPI.Services
             }
             await _carRepo.RemoveCarAsync(carId);
             return (true, "Car removed successfully");
+        }
+
+        public async Task<IEnumerable<CarResponse>> SearchCarsAsync(int dealerId, string make, string? model)
+        {
+            var cars = await _carRepo.SearchCarsAsync(dealerId, make, model);
+            return cars.Select(car => new CarResponse
+            {
+                CarId = car.Id,
+                Make = car.Make,
+                Model = car.Model,
+                Year = car.Year,
+                Color = car.Color,
+                Stock = car.Stock
+            });
+
         }
 
         public async Task<(bool IsSuccess, string Message)> UpdateCarStockAsync(int dealerId, int carId, int newStock)

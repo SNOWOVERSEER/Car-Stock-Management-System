@@ -20,6 +20,7 @@ namespace CarStockManagementAPI.Endpoints.Cars
         {
             Verbs(Http.POST);
             Routes("api/cars/update-stock");
+            Validator<UpdateCarStockRequestValidator>();
         }
         public override async Task HandleAsync(UpdateCarStockRequest request, CancellationToken ct)
         {
