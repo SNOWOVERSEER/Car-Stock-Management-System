@@ -135,4 +135,36 @@ public class CarServiceTests
         Assert.Empty(result);
     }
 
+    // UpdateCarStockAsync
+    [Fact]
+    public async Task UpdateCarStockAsync_ShouldUpdateStock_WhenCarBelongsToDealer()
+    {
+        int dealerId = 1;
+        int carId = 1;
+        var car = new Car { Id = carId, DealerId = dealerId, Stock = 5 };
+
+        _carRepoMock.Setup(r => r.GetCarByIdAsync(carId)).ReturnsAsync(car);
+        _carRepoMock.Setup(r => r.UpdateCarStockAsync(It.IsAny<Car>())).Returns(Task.CompletedTask);
+
+        var result = await _carService.UpdateCarStockAsync(dealerId, carId, 10);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("Stock updated successfully", result.Message);
+    }
+
+    [Fact]
+    public async Task UpdateCarStockAsync_ShouldFail_WhenCarDoesNotBelongToDealer()
+    {
+        int dealerId = 1;
+        int carId = 1;
+        var car = new Car { Id = carId, DealerId = 2, Stock = 5 };
+
+        _carRepoMock.Setup(r => r.GetCarByIdAsync(carId)).ReturnsAsync(car);
+
+        var result = await _carService.UpdateCarStockAsync(dealerId, carId, 10);
+
+        Assert.False(result.IsSuccess);
+        Assert.Equal("Car not found or you do not have permission to update this car", result.Message);
+    }
+
 }

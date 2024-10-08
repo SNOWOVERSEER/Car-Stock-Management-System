@@ -34,6 +34,7 @@ namespace CarStockManagementAPI.Endpoints.Cars
 
             var carResponses = cars.Select(car => new CarResponse
             {
+                CarId = car.Id,
                 Make = car.Make,
                 Model = car.Model,
                 Year = car.Year,
