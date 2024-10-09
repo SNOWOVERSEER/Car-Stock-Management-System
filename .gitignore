@@ -1,0 +1,18 @@
+# build
+bin/
+obj/
+
+# user-specific files
+.vscode/
+.vs/
+*.user
+*.suo
+
+# logs
+*.log
+*.pdb
+*.cache
+
+# packages
+*.nupkg
+packages/
