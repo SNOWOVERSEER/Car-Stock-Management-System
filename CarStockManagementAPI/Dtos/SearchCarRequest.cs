@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace CarStockManagementAPI.Dtos
 {
     public class SearchCarRequest
     {
-        public string Make { get; set; }
+        public required string Make { get; set; }
         public string? Model { get; set; }
     }
     public class SearchCarRequestValidator : Validator<SearchCarRequest>

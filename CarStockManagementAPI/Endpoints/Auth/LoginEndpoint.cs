@@ -1,6 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using CarStockManagementAPI.Dtos;
 using CarStockManagementAPI.Services;
@@ -24,13 +23,20 @@ namespace CarStockManagementAPI.Endpoints.Auth
         }
         public override async Task HandleAsync(LoginRequest request, CancellationToken ct)
         {
-            var result = await _authService.AuthenticateAsync(request.Email, request.Password);
-            if (!result.IsSuccess)
+            try
             {
-                await SendAsync(new LoginResponse { Message = result.Message }, 401);
-                return;
+                var result = await _authService.AuthenticateAsync(request.Email, request.Password);
+                if (!result.IsSuccess)
+                {
+                    await SendAsync(new LoginResponse { Message = result.Message }, 401);
+                    return;
+                }
+                await SendOkAsync(new LoginResponse { Message = result.Message, Token = result.Token });
             }
-            await SendOkAsync(new LoginResponse { Message = result.Message, Token = result.Token });
+            catch
+            {
+                await SendAsync(new LoginResponse { Message = "An unexpected error occurred." }, 500);
+            }
         }
     }
 }

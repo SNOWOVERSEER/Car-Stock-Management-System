@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("CarDealershipDatabase"); ;
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddLogging();
 builder.Services.AddSingleton(new CarDealershipDbContext(connectionString));
 builder.Services.AddScoped<IDbConnection>(sp => new SqliteConnection(connectionString));
 builder.Services.AddScoped<IDealerRepo, DealerRepo>();

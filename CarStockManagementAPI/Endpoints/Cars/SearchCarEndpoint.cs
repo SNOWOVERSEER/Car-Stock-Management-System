@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -16,34 +15,41 @@ namespace CarStockManagementAPI.Endpoints.Cars
         {
             _carService = carService;
         }
+
         public override void Configure()
         {
-            Verbs(Http.POST);
+            Verbs(Http.GET);
             Routes("/api/cars/search");
             Validator<SearchCarRequestValidator>();
         }
+
         public override async Task HandleAsync(SearchCarRequest request, CancellationToken ct)
         {
-            var dealerId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-
-            if (dealerId == null)
+            try
             {
-                await SendAsync(new { message = "Unauthorized" }, 401);
-                return;
+                var dealerId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                if (dealerId == null)
+                {
+                    await SendAsync(new { message = "Unauthorized" }, 401);
+                    return;
+                }
+
+                var cars = await _carService.SearchCarsAsync(int.Parse(dealerId), request.Make, request.Model);
+
+                if (!cars.Any())
+                {
+                    await SendAsync(new { message = "No cars found" }, 404);
+                }
+                else
+                {
+                    await SendOkAsync(cars, ct);
+                }
             }
-            var cars = await _carService.SearchCarsAsync(int.Parse(dealerId), request.Make, request.Model);
-            if (!cars.Any())
+            catch
             {
-                await SendAsync(new { message = "No cars found" }, 404);
+                await SendAsync(new { message = "An unexpected error occurred." }, 500);
             }
-            else
-            {
-                await SendOkAsync(cars, ct);
-            }
-
-
-
         }
-
     }
 }
