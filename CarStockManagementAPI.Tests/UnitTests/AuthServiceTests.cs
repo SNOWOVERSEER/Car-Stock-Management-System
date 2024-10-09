@@ -6,6 +6,7 @@ using CarStockManagementAPI.Models;
 using CarStockManagementAPI.Utils;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 
 namespace CarStockManagementAPI.Tests.UnitTests
@@ -14,12 +15,14 @@ namespace CarStockManagementAPI.Tests.UnitTests
     {
         private readonly Mock<IDealerRepo> _dealerRepoMock;
         private readonly AuthService _authService;
+        private readonly Mock<ILogger<AuthService>> _loggerMock;
         public AuthServiceTests()
         {
             _dealerRepoMock = new Mock<IDealerRepo>();
+            _loggerMock = new Mock<ILogger<AuthService>>();
             var tokenGeneratorMock = new Mock<IJwtTokenGenerator>();
             tokenGeneratorMock.Setup(t => t.GenerateToken(It.IsAny<string>())).Returns("fake-token");
-            _authService = new AuthService(_dealerRepoMock.Object, tokenGeneratorMock.Object);
+            _authService = new AuthService(_dealerRepoMock.Object, tokenGeneratorMock.Object, _loggerMock.Object);
         }
 
         [Fact]

@@ -5,16 +5,19 @@ using CarStockManagementAPI.Repositories;
 using CarStockManagementAPI.Models;
 using System.Threading.Tasks;
 using CarStockManagementAPI.Dtos;
+using Microsoft.Extensions.Logging;
 
 public class CarServiceTests
 {
     private readonly Mock<ICarRepo> _carRepoMock;
+    private readonly Mock<ILogger<CarService>> _loggerMock;
     private readonly CarService _carService;
 
     public CarServiceTests()
     {
         _carRepoMock = new Mock<ICarRepo>();
-        _carService = new CarService(_carRepoMock.Object);
+        _loggerMock = new Mock<ILogger<CarService>>();
+        _carService = new CarService(_carRepoMock.Object, _loggerMock.Object);
     }
     // AddCarAsync
     [Fact]
