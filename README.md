@@ -212,6 +212,19 @@ dotnet restore
     - 400 Bad Request: `{"message": "Car not found or you do not have permission to update this car"}`
 
 
+## Demo Dealer User Accounts
+
+To test the system, you can use the following demo dealer accounts:
+
+1. **Email:** `example@gmail.com`  
+   **Password:** `123456`
+
+2. **Email:** `example2@gmail.com`  
+   **Password:** `123456`
+
+Feel free to register your own account as well to explore additional features.
+
+
 ## Authentication Details
 
 The API uses **JWT (JSON Web Tokens)** for securing endpoints.
