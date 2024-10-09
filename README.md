@@ -280,9 +280,10 @@ Standard response structure for errors:
 
 The project uses **xUnit** and **Moq** for unit tests.
 
-### Run Unit Tests:
+### Run Unit Tests at project root:
 ```bash
 dotnet test
+dotnet test CarStockManagementAPI.Tests
 ```
 
 **Test cases include**:
