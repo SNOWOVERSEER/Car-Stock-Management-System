@@ -18,7 +18,7 @@ namespace CarStockManagementAPI.Endpoints.Cars
 
         public override void Configure()
         {
-            Verbs(Http.GET);
+            Verbs(Http.POST);
             Routes("/api/cars/search");
             Validator<SearchCarRequestValidator>();
         }
