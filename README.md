@@ -59,24 +59,14 @@ dotnet restore
 
 ## Running the Project
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-repository-link.git
-   ```
-
-2. Navigate to the project folder:
-   ```bash
-   cd CarStockManagementAPI
-   ```
-
-3. Run the API:
+1. Run the API:
    ```bash
    dotnet run
    ```
 
-4. The API will run by default on `http://localhost:5176`. You can modify this base URL in the `launchSettings.json` file.
+2. The API will run by default on `http://localhost:5176`. You can modify this base URL in the `launchSettings.json` file.
 
-5. API documentation (Swagger) can be accessed at `http://localhost:5176/swagger/index.html` after the API is running.
+3. API documentation (Swagger) can be accessed at `http://localhost:5176/swagger/index.html` after the API is running.
 
 
 
